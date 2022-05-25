@@ -12,7 +12,8 @@ exports.update=(req,res)=>{
         name:req.body.name,
         cardID:req.body.cardID,
         des:req.body.des,
-        school:req.body.school
+        school:req.body.school,
+        imgUrl:req.body.imgUrl
     },{
     where:{
         id:"1"

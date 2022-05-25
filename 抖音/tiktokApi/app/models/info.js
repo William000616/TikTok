@@ -12,6 +12,9 @@ module.exports=(sequelize,Sequelize)=>{
         school:{
             type:Sequelize.STRING
         },
+        imgUrl:{
+            type:Sequelize.STRING
+        }
     })
     return Information
 }
