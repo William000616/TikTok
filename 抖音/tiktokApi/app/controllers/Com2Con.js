@@ -17,7 +17,7 @@ exports.create=(req,res)=>{
         res.send(data)
     }).catch(err=>{
         res.status(500).send({
-            message:err.message || "注册失败"
+            message:err.message || "发表失败"
         })
     })
 }

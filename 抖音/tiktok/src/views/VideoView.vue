@@ -1,43 +1,18 @@
 <template>
   <div class="video">
-    <van-swipe
-      class="my-swipe"
-      indicator-color="black"
-      vertical
-      @change="onChange"
-    >
+    <van-swipe class="my-swipe" indicator-color="black" vertical @change="onChange">
       <van-swipe-item v-for="(item, i) in dataList" :key="i">
         <div>
-          <svg
-            id="play"
-            @click="playPause(item.id)"
-            class="button1"
-            aria-hidden="true"
-            v-if="!pause"
-          >
+          <svg id="play" @click="playPause(item.id)" class="button1" aria-hidden="true" v-if="!pause">
             <use xlink:href="#icon-bofang1"></use>
           </svg>
-          <svg
-            id="zanting"
-            @click="playPause(item.id)"
-            class="button"
-            aria-hidden="true"
-            v-else
-          >
+          <svg id="zanting" @click="playPause(item.id)" class="button" aria-hidden="true" v-else>
             <use xlink:href="#icon-zanting"></use>
           </svg>
           <div class="rightbar_warp">
             <right-bar @click="showComs"></right-bar>
           </div>
-          <video
-            class="videoplay"
-            width="350"
-            height="700"
-            loop
-            :id="item.id"
-            preload="auto"
-            webkit-playsinline="true"
-          >
+          <video class="videoplay" width="350" height="700" loop :id="item.id" preload="auto" webkit-playsinline="true">
             <source :src="item.url" type="video/mp4" />
           </video>
         </div>
@@ -47,7 +22,7 @@
     <transition name="up">
       <div class="comment-warp-box" v-if="showComment">
         <div class="comment-warp">
-          <div class="comment-list">
+          <div class="comment-list" v-if="comListShow">
             <div class="comment-top">
               <div class="number">18.0w条评论</div>
               <div class="close" @click="close"><span>X</span></div>
@@ -69,9 +44,9 @@
                       <svg class="icon0" aria-hidden="true">
                         <use xlink:href="#icon-dianzan"></use>
                       </svg>
-                      <span class="iconfont icon-aixin"
-                        ><p>{{ item.zan }}</p></span
-                      >
+                      <span class="iconfont icon-aixin">
+                        <p>{{ item.zan }}</p>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -93,9 +68,9 @@
                       <svg class="icon0" aria-hidden="true">
                         <use xlink:href="#icon-dianzan"></use>
                       </svg>
-                      <span class="iconfont icon-aixin"
-                        ><p>{{ item.zan1 }}</p></span
-                      >
+                      <span class="iconfont icon-aixin">
+                        <p>{{ item.zan1 }}</p>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -119,9 +94,9 @@
                       <svg class="icon0" aria-hidden="true">
                         <use xlink:href="#icon-dianzan"></use>
                       </svg>
-                      <span class="iconfont icon-aixin"
-                        ><p>{{ item.zan }}</p></span
-                      >
+                      <span class="iconfont icon-aixin">
+                        <p>{{ item.zan }}</p>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -130,12 +105,11 @@
           </div>
           <!-- 评论框 -->
           <div class="reply-input">
-            <input type="text" placeholder="留下你的精彩评论" />
+            <input type="text" placeholder="留下你的精彩评论" v-model="des0" />
             <span class="emoji">@</span>
-            <span class="iconfont icon-pinglun"
-              ><svg class="icon1" aria-hidden="true">
-                <use xlink:href="#icon-jijianfasong-xianxing"></use></svg
-            ></span>
+            <span class="iconfont icon-pinglun"><svg class="icon1" aria-hidden="true" @click="pub" @keydown.enter="pub">
+                <use xlink:href="#icon-jijianfasong-xianxing"></use>
+              </svg></span>
           </div>
         </div>
       </div>
@@ -157,6 +131,8 @@ export default {
     const state = reactive({
       showComment: store.state.showComment,
       pause: false,
+      comListShow: true,
+      des0: "",
       comList: [],
       comList2: [],
       dataList: [
@@ -254,24 +230,43 @@ export default {
         state.pause = !state.pause;
       }
     };
-    onMounted(()=>{
-      axios.get("http://localhost:3000/api/user/comm1",{
-        
-      }).then(res=>{
-       
-        state.comList=res.data      
-         console.log(state.comList)
+    onMounted(() => {
+      axios.get("http://localhost:3000/api/user/comm1", {
+
+      }).then(res => {
+
+        state.comList = res.data
 
       })
-      axios.get("http://localhost:3000/api/user/comm2",{
-        
-      }).then(res=>{
-       
-        state.comList2=res.data      
-         console.log(state.comList)
+      axios.get("http://localhost:3000/api/user/comm2", {
+
+      }).then(res => {
+
+        state.comList2 = res.data
+        console.log(state.comList)
 
       })
     })
+
+    const pub = () => {
+      if (state.des0 === "") {
+        console.log("不能发表空白评论！")
+      } else {
+        // state.comListShow=false
+        axios.post("http://localhost:3000/api/user/comm2", {
+          des: state.des0
+        }).then(res => {
+          console.log(res.data)
+          axios.get("http://localhost:3000/api/user/comm2", {
+          }).then(res => {
+            state.comList2 = res.data
+            console.log(state.comList)
+          })
+          //  state.comListShow=true
+        })
+
+      }
+    }
     const showComs = () => {
       state.showComment = true;
     };
@@ -285,6 +280,7 @@ export default {
       stop,
       showComs,
       close,
+      pub,
     };
   },
 };
@@ -292,10 +288,11 @@ export default {
 
 <style lang="less" scoped>
 .video {
-  overflow: scroll;
+  overflow: hidden;
+
   .my-swipe {
-    height: 800px;
-    // overflow: scroll;
+    height: 712px;
+
     .van-swipe-item {
       color: #fff;
       font-size: 20px;
@@ -321,29 +318,38 @@ export default {
   fill: #fff;
   opacity: 0.5;
 }
+
 .button {
   position: absolute;
   z-index: 1000;
   // margin-left: 22%;
   margin-top: 50%;
   box-sizing: border-box;
-  width: 360px;
-  height: 360px;
+  width: 300px;
+  height: 300px;
   opacity: 0;
 }
+
 .rightbar_warp {
   position: absolute;
   z-index: 500;
 }
+
 /* 评论 */
 .up-enter-active,
 .up-leave-active {
   transition: all 0.5s;
 }
-.up-enter, .up-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.up-enter,
+.up-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
   transform: translateY(100%);
 }
+
 .comment-warp-box {
   position: fixed;
   bottom: 0px;
@@ -353,6 +359,7 @@ export default {
   background: #fff;
   z-index: 88;
 }
+
 .comment-warp {
   z-index: 10000000000;
   position: fixed;
@@ -375,55 +382,67 @@ export default {
   display: flex;
   align-items: center;
 }
+
 .comment-box {
   margin-top: 20px;
 }
+
 .number {
   flex: 1;
   text-align: center;
   margin-left: 34px;
 }
+
 .close {
   padding-right: 10px;
   font-size: 30px;
   color: #666;
 }
+
 .comment-body {
   max-width: 450px;
   margin-top: 20px;
 }
+
 .comment-item {
   display: flex;
 }
+
 .user-pic img {
   width: 33px;
   height: 33px;
   border-radius: 50%;
 }
+
 .item-info {
   margin-left: 10px;
   display: flex;
   flex: 1 1 auto;
 }
+
 .reply {
   width: 90%;
 }
+
 .icon0 {
   width: 22px;
   fill: #666;
   height: 22px;
   margin-top: 5px;
 }
+
 .reply-des {
   line-height: 24px;
   text-align: left;
   margin-top: -8px;
 }
+
 .reply-des1 {
   line-height: 24px;
   margin-top: -8px;
   text-align: left;
 }
+
 .reply .name {
   font-weight: 900;
   color: #666;
@@ -431,6 +450,7 @@ export default {
   text-align: left;
   margin-top: 0px;
 }
+
 .reply .name1 {
   font-weight: 900;
   color: #666;
@@ -438,35 +458,42 @@ export default {
   text-align: left;
   margin-top: -1px;
 }
+
 .reply .time {
   color: #666;
   font-weight: 800;
 }
+
 .zan .iconfont {
   font-size: 20px;
   color: #ccc;
   margin: 0 10px;
 }
+
 .zan p {
   font-size: 6px;
   color: #666;
   margin-top: -18px;
   padding-left: 0px;
 }
+
 .sub-comment-item {
   display: flex;
   margin-left: 33px;
   margin-top: -6px;
 }
+
 .re-name {
   font-weight: 700;
   padding: 0 10px;
   color: #666;
 }
+
 .more {
   margin-left: 33px;
   margin-top: -9px;
 }
+
 .reply-input {
   width: 100%;
   height: 50px;
@@ -479,6 +506,7 @@ export default {
   display: flex;
   align-items: center;
 }
+
 .reply-input input {
   margin-left: 10px;
   line-height: 40px;
@@ -486,11 +514,13 @@ export default {
   border: none;
   padding: 0 10px;
 }
+
 .reply-input .emoji {
   font-size: 30px;
   color: #ccc;
   margin-left: 12px;
 }
+
 .reply-input .iconfont {
   font-size: 26px;
   color: #ccc;
