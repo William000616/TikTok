@@ -243,9 +243,10 @@ export default {
       }).then(res => {
 
         state.comList2 = res.data
-        console.log(state.comList)
+        // console.log(state.comList)
 
       })
+      
     })
 
     const pub = () => {
