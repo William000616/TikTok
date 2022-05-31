@@ -22,7 +22,8 @@
 
 | 姓名   |   学号   |       班级 |                  任务 | 权重 |
 | :----- | :------: | ---------: | --------------------: | ---: |
-| 黄吉祥 | 31901108 | 计算机1904 | 为抖音App前端传输数据 |  1.0 |
+| 黄吉祥 | 31901108 | 计算机1904 | 为抖音App前端传输数据，数据库设计及后端接口的编写 |  1.0 |
+| 高政杰 | 31901226 | 软工1904 | 负责前端对接口的使用和调试 |  0.9 |
 
 2. 项目自我评估表
 
@@ -455,32 +456,33 @@
        解决：
       找到了Sequelize+express数据库框架，便于编写，代码变得十分精炼：
 ```javascript
-       const db = require("../config/db.js");
-        const Sequelize = require("sequelize");
+          const db = require("../config/db.js");
+            const Sequelize = require("sequelize");
 
-      const sequelize = new Sequelize(
-          db.DB,
-          db.USER,
-          db.PASSWORD,
-          {
-              host:db.HOST,
-              dialect:db.dialect
-          }
-      )
-      const dbdb={};
-      dbdb.sequelize=sequelize;
-      dbdb.Sequelize=Sequelize;
-      dbdb.User=require('../models/user.js')(sequelize,Sequelize)
-      dbdb.Information=require('../models/info.js')(sequelize,Sequelize)
-      dbdb.Comment1=require('../models/Com_1.js')(sequelize,Sequelize)
-      dbdb.Comment2=require('../models/Com_2.js')(sequelize,Sequelize)
-      dbdb.Video=require('../models/video.js')(sequelize,Sequelize)
-      module.exports=dbdb
+          const sequelize = new Sequelize(
+              db.DB,
+              db.USER,
+              db.PASSWORD,
+              {
+                  host:db.HOST,
+                  dialect:db.dialect
+              }
+          )
+          const dbdb={};
+          dbdb.sequelize=sequelize;
+          dbdb.Sequelize=Sequelize;
+          dbdb.User=require('../models/user.js')(sequelize,Sequelize)
+          dbdb.Information=require('../models/info.js')(sequelize,Sequelize)
+          dbdb.Comment1=require('../models/Com_1.js')(sequelize,Sequelize)
+          dbdb.Comment2=require('../models/Com_2.js')(sequelize,Sequelize)
+          dbdb.Video=require('../models/video.js')(sequelize,Sequelize)
+          module.exports=dbdb
 ```
      
       2、上传文件路径转url没思路
 
       解决：采用createObjectURL函数将获取到的文件路径转为url并通过调用接口传到数据库中。
+
 ```javascript
   const change = () => {
       state.file = document.getElementById("file").files[0];
