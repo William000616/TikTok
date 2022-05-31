@@ -71,7 +71,7 @@
 
    刚刚打开评论区时的数据显示
 
-   <img src=".\img\4.png" alt="4" style="zoom:23%;" /> 
+   <img src="./img/2.png" alt="4" style="zoom:23%;" /> 
 
    发表评论模块绑定接口实现个人评论发表功能，点击发表图标按钮@click调用接口回传输入框的评论内容至数据库，axios再次调用更新评论区数据。
 
@@ -98,7 +98,7 @@
     }
 ```
 
-   <img src=".\img\3.jpg" alt="3" style="zoom: 24%;"  align='left'>
+   <img src=".\img\3.png" alt="3" style="zoom: 24%;"  align='left'>
 
    
 
@@ -128,7 +128,7 @@
   })
 ```
 
-   <img src=".\img\12.png" alt="12" style="zoom: 45%;" align="left">
+   <img src=".\img\4.png" alt="12" style="zoom: 45%;" align="left">
 
    3、个人资料修改界面
 
@@ -170,7 +170,7 @@
             router.push("/me");
           });
    ```
-
+<img src=".\img\5.png" alt="12" style="zoom: 45%;" align="left">
   头像修改功能：
 
   采用createObjectURL函数将获取到的文件路径转为url并通过调用接口传到数据库中，然后上传成功后返回修改界面再次调用个人信息获取接口，实现头像更新。
@@ -196,6 +196,8 @@
             router.push("/me");
           });
 ```
+<img src=".\img\6.png" alt="12" style="zoom: 45%;" align="left">
+<img src=".\img\7.png" alt="12" style="zoom: 45%;" align="left">
    4、注册界面
 
    注册功能的实现就是axios调用post请求将输入框的账号密码通过接口发送到后端数据库并保存起来，实现注册功能。
@@ -220,7 +222,7 @@
     }
 ```
 
-   <img src=".\img\13.png" alt="13" style="zoom:23%;" /> 
+   <img src=".\img\8.png" alt="13" style="zoom:23%;" /> 
 
 
    7、登录界面
@@ -264,7 +266,7 @@
     })
   }
 ```
-
+<img src=".\img\9.png" alt="13" style="zoom:23%;" /> 
 4. 解决技术要点说明
 
    整个后端由controller、routes、config、models、app.js组成，项目结构如下
@@ -592,5 +594,5 @@
      
        - 课程难度方面，进度方面，课程内容，授课方式等，给出你的意见
      
-         课程难度适中，但是作为js基础差点的人只能吸收课程的知识点，但是一节课理论一节课实验的模式能帮助我活用知识，但是我觉得node.js讲授的再早一点就好了，在接触nodejs之前一直是用springboot写后端，写的过程非常繁琐且心累。对这门课的建议的话就是希望老师能讲一些动画效果等拓展的js，对于基础的内容讲的更深入一些，虽然node.js写接口其实不是特别主流，但用它写接口感觉特别得心应手，果然基础的东西到哪都能用。
+         课程难度适中，但是作为js基础差点的人只能吸收课程的知识点，但是一节课理论一节课实验的模式能帮助我活用知识，但是我觉得node.js讲授的再早一点就好了，在接触nodejs之前一直是用springboot写后端，写的过程非常繁琐且心累。对这门课的建议的话就是希望老师能讲一些动画效果等拓展的js，对于基础的内容讲的更深入一些，虽然node.js写接口其实不是特别主流，但用它写接口感觉特别得心应手，毕竟基础的东西到哪都能用。
 
