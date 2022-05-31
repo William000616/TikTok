@@ -126,6 +126,7 @@ import store from "../store/index.js";
 export default {
   components: {
     RightBar,
+    
   },
   setup() {
     const state = reactive({
