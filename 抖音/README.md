@@ -48,8 +48,8 @@
 
    mounted阶段使用axios调用接口获取评论区数据，并赋值给动态绑定的数据
 
-   ```javascript
-  onMounted(() => {
+```javascript
+    onMounted(() => {
       axios.get("http://localhost:3000/api/user/comm1", {
 
       }).then(res => {
@@ -67,7 +67,7 @@
       })
       
     })
-   ```
+```
 
    刚刚打开评论区时的数据显示
 
@@ -76,8 +76,8 @@
    发表评论模块绑定接口实现个人评论发表功能，点击发表图标按钮@click调用接口回传输入框的评论内容至数据库，axios再次调用更新评论区数据。
 
 
-    ```javascript
-  const pub = () => {
+```javascript
+    const pub = () => {
       if (state.des0 === "") {
         console.log("不能发表空白评论！")
       } else {
@@ -96,7 +96,7 @@
 
       }
     }
-   ```
+```
 
    <img src=".\img\3.jpg" alt="3" style="zoom: 24%;"  align='left'>
 
@@ -106,8 +106,8 @@
 
    在mounted阶段axios调用接口获取个人资料并双向绑定渲染在前端页面中。
 
-    ```javascript
-  onMounted(()=>{
+```javascript
+    onMounted(()=>{
 
       axios.get("http://localhost:3000/api/user/info",{
         
@@ -126,7 +126,7 @@
         }
       })
   })
-   ```
+```
 
    <img src=".\img\12.png" alt="12" style="zoom: 45%;" align="left">
 
@@ -134,8 +134,8 @@
 
    首先在mounted阶段通过axios调用接口获取个人资料信息
 
-    ```javascript
-  onMounted(() => {
+```javascript
+    onMounted(() => {
       axios.get("http://localhost:3000/api/user/info", {}).then((res) => {
         // console.log(res.data)
         state.infoList = res.data;
@@ -152,11 +152,11 @@
         
       });
     });
-   ```
+```
 
   axios发送修改个人资料post请求，对数据库个人信息进行修改
 
- ```javascript
+```javascript
   axios.post("http://localhost:3000/api/user/info", {
             name: state.nickname,
             cardID: state.cardId,
@@ -182,7 +182,7 @@
       console.log("头像修改成功！");
     };
 ```
- ```javascript
+```javascript
   axios.post("http://localhost:3000/api/user/info", {
             name: state.nickname,
             cardID: state.cardId,
@@ -195,7 +195,7 @@
             console.log("修改成功！");
             router.push("/me");
           });
-   ```
+```
    4、注册界面
 
    注册功能的实现就是axios调用post请求将输入框的账号密码通过接口发送到后端数据库并保存起来，实现注册功能。
@@ -245,7 +245,7 @@
 ```
   后端验证规则：
 ```javascript
-exports.findAll=(req,res)=>{
+  exports.findAll=(req,res)=>{
     const user={
         username:req.body.username,
         password:req.body.password
@@ -262,7 +262,7 @@ exports.findAll=(req,res)=>{
     }).then((data)=>{
         res.send(data)
     })
-}
+  }
 ```
 
 4. 解决技术要点说明
@@ -273,19 +273,19 @@ exports.findAll=(req,res)=>{
 
    1、config/db.js用于建立数据库连接
 
-   ```javascript
+```javascript
    module.exports={
     HOST:"localhost",
     USER:"root",
     PASSWORD:"123456",
     DB:"tiktok",
     dialect:'mysql',}
-   ```
+  ```
 
    并将对象模块化，可在其它文件内调用
 
 ```javascript
-const sequelize = new Sequelize(
+  const sequelize = new Sequelize(
     db.DB,
     db.USER,
     db.PASSWORD,
@@ -293,30 +293,30 @@ const sequelize = new Sequelize(
         host:db.HOST,
         dialect:db.dialect
     }
-)
-const dbdb={};
-dbdb.sequelize=sequelize;
-dbdb.Sequelize=Sequelize;
-dbdb.User=require('../models/user.js')(sequelize,Sequelize)
-dbdb.Information=require('../models/info.js')(sequelize,Sequelize)
-dbdb.Comment1=require('../models/Com_1.js')(sequelize,Sequelize)
-dbdb.Comment2=require('../models/Com_2.js')(sequelize,Sequelize)
-dbdb.Video=require('../models/video.js')(sequelize,Sequelize)
-module.exports=dbdb
+  )
+  const dbdb={};
+  dbdb.sequelize=sequelize;
+  dbdb.Sequelize=Sequelize;
+  dbdb.User=require('../models/user.js')(sequelize,Sequelize)
+  dbdb.Information=require('../models/info.js')(sequelize,Sequelize)
+  dbdb.Comment1=require('../models/Com_1.js')(sequelize,Sequelize)
+  dbdb.Comment2=require('../models/Com_2.js')(sequelize,Sequelize)
+  dbdb.Video=require('../models/video.js')(sequelize,Sequelize)
+  module.exports=dbdb
 ```
 
    2、controller编写接口，调用数据库
 
    以个人信息获取和修改为例
 
-   ```javascript
-exports.findAll=(req,res)=>{//获取个人信息
+```javascript
+  exports.findAll=(req,res)=>{//获取个人信息
     Info.findAll().then((data)=>{
         res.send(data)
     })
     
-}
-exports.update=(req,res)=>{//修改个人信息
+  }
+  exports.update=(req,res)=>{//修改个人信息
     Info.update({
         name:req.body.name,
         cardID:req.body.cardID,
@@ -328,11 +328,11 @@ exports.update=(req,res)=>{//修改个人信息
         id:"1"
     }
     }
- ).then((data)=>{
+  ).then((data)=>{
     res.send(data)
-})
-}
-   ```
+  })
+  }
+```
 
    req为接收到的传参，res为返回的数据
 
@@ -340,7 +340,7 @@ exports.update=(req,res)=>{//修改个人信息
 
    以评论区表为例
 
-   ```javascript
+```javascript
    module.exports=(sequelize,Sequelize)=>{
     const Comment1=sequelize.define("commment1",{
         name:{
@@ -371,36 +371,36 @@ exports.update=(req,res)=>{//修改个人信息
             type:Sequelize.STRING
         }
     })
-    return Comment1
-}
-   ```
+    return Comment1 
+  }
+```
 
    4、app.js配置跨域并启动后台
 
    引入接口文件
 
-   ```javascript
+```javascript
    const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const app = express();
-var corsOptions = {
+   const bodyParser = require("body-parser");
+    const cors = require("cors");
+    const app = express();
+    var corsOptions = {
     origin: "http://localhost:8080"
-};
-app.use(cors(corsOptions));
+  };
+    app.use(cors(corsOptions));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({
     extended: true
-}));
-const db = require("./app/models");
-db.sequelize.sync()
-require("./app/routes/userRou")(app)
+    }));
+    const db = require("./app/models");
+    db.sequelize.sync()
+    require("./app/routes/userRou")(app)
 
-app.listen(3000,()=>{
-    console.log("项目运行成功：http://localhost:3000")
-})
-   ```
+    app.listen(3000,()=>{
+        console.log("项目运行成功：http://localhost:3000")
+    })
+```
 
    端口默认3000
 
@@ -424,7 +424,7 @@ app.listen(3000,()=>{
     router.get("/video",video.findAll)//获取视频列表
     app.use('/api/user',router)
     
-}
+  }
 ```
 
    6、接口文档
