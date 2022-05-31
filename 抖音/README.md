@@ -450,139 +450,46 @@
    - 大项目开发过程心得
      - 遇到哪些困难，经历哪里过程，有哪些收获
      
-       1、后端数据中的图片不显示
-     
-       只能绑定静态图片资源，用require将其路径换成static
-     
-       解决：
-     
-       ```javascript
-       getpath(img) {
-       	return require('@/imgs/' + img);
-       }
-       ```
-     
-       通过express配置静态资源访问localhost来访问图片
-     
-       解决：
-     
-       ```javascript
-       //静态资源
-       app.use(express.static(path.resolve(__dirname, 'public')));
-       app.use('/public', express.static('public'));
-       ```
-       
-       2、一个接口想要使用多条数据库语句
-       
-       为了安全起见，默认情况下是不允许执行多条查询语句的。要使用多条查询语句的功能，就需要在创建数据库连接的时候打开这一功能`multipleStatements: true`
-       
-       解决：
-       
-       ```javascript
-       const config = {
-         host: "localhost",
-         port: "3306",
-         user: "root",
-         password: "123456",
-         database: "zyserver",
-         multipleStatements: true
-       };
-       ```
-       
-       3、连接超过数量限制
-       
-       之前把createpool放在sqlConnect函数里了，所以不停创建连接池，连接池上限为150，超过会报错，需重新启动
-       
-       解决：
-       
-       ```javascript
-       //连接数据库，使用mysql的连接池连接方式
-       var pool = mysql.createPool(config);
-       module.exports = {
-         pool: pool,
-         //连接池对象
-         sqlConnect: function (sql, sqlArr, callBack) {
-           //var pool = mysql.createPool(config);
-           pool.getConnection((err, conn) => {
-             if (err) {
-               console.log("连接失败");
-               return;
-             }
-             //事件驱动回调
-             conn.query(sql, sqlArr, callBack);
-             //释放连接
-             conn.release();
-           });
-         },
-       };
-       ```
-       
-       4、想在一个接口select数据库，然后把select到的数据加传参进行insert
-       
-       会导致有多个回调，未解决，把所有接口分开写了在前端解决
-       
-       ```javascript
-       add(id) {
-       	if (this.user != null) {
-       		this.axios.get("http://localhost:3000/cart/getcartid?username=" + this.user.username).then(
-       	res => {
-       	if (res.data.code == 200) {
-       		var cartid = res.data.list[0].id;
-       		this.axios.get("http://localhost:3000/cart/select?productid=" + id + "&cartid=" +cartid).then(
-       			res => {
-       				if (res.data.code == 200) {
-       					//add
-       					this.axios.get("http://localhost:3000/cart/add?productid=" + id + "&cartid=" + cartid).then(
-       						res => {
-       							if (res.data.code == 200) {
-       								//add
-       								this.$message({
-       									type: 'success',
-       									message: '添加成功'
-       								});
-       							} else {
-       								this.$message({
-       								type: 'error',
-       								message: '添加失败'
-       							});
-       						}
-       					})
-       				} else {
-       					//insert
-       					this.axios.get("http://localhost:3000/cart/insert?productid=" + id +"&cartid=" + cartid).then(
-       						res => {
-       							if (res.data.code == 200) {
-       								//add
-       								this.$message({
-       									type: 'success',
-       									message: '添加成功'
-       								});
-       							} else {
-       								this.$message({
-       									type: 'error',
-       									message: '添加失败'
-       								});
-       							}
-       						})
-       					}
-       				})
-       			} else {
-       				this.$message({
-       					type: 'error',
-       					message: '您还未登录'
-       				});
-       			}
-       		})
-       	} else {
-       		this.$message({
-       			type: 'error',
-       			message: '您还未登录'
-       		});
-       	}
-       }
-       ```
+       1、node.js连接数据库无从下手，觉得过去繁琐
 
-       ```
+       解决：
+      找到了Sequelize+express数据库框架，便于编写，代码变得十分精炼：
+```javascript
+       const db = require("../config/db.js");
+        const Sequelize = require("sequelize");
+
+      const sequelize = new Sequelize(
+          db.DB,
+          db.USER,
+          db.PASSWORD,
+          {
+              host:db.HOST,
+              dialect:db.dialect
+          }
+      )
+      const dbdb={};
+      dbdb.sequelize=sequelize;
+      dbdb.Sequelize=Sequelize;
+      dbdb.User=require('../models/user.js')(sequelize,Sequelize)
+      dbdb.Information=require('../models/info.js')(sequelize,Sequelize)
+      dbdb.Comment1=require('../models/Com_1.js')(sequelize,Sequelize)
+      dbdb.Comment2=require('../models/Com_2.js')(sequelize,Sequelize)
+      dbdb.Video=require('../models/video.js')(sequelize,Sequelize)
+      module.exports=dbdb
+```
+     
+      2、上传文件路径转url没思路
+
+      解决：采用createObjectURL函数将获取到的文件路径转为url并通过调用接口传到数据库中。
+```javascript
+  const change = () => {
+      state.file = document.getElementById("file").files[0];
+      state.url = window.URL.createObjectURL(state.file);
+      console.log(state.url);
+      console.log("头像修改成功！");
+    };
+```
+
        
      - 本课程建议
      
