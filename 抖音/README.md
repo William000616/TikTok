@@ -98,7 +98,7 @@
     }
 ```
 
-   <img src=".\img\3.png" alt="3" style="zoom: 24%;"  align='left'>
+   <img src=".\img\3.png" alt="3" style="zoom: 24%;"  >
 
    
 
@@ -128,7 +128,7 @@
   })
 ```
 
-   <img src=".\img\4.png" alt="12" style="zoom: 45%;" align="left">
+   <img src=".\img\4.png" alt="12" style="zoom: 45%;" >
 
    3、个人资料修改界面
 
@@ -170,7 +170,7 @@
             router.push("/me");
           });
    ```
-<img src=".\img\5.png" alt="12" style="zoom: 45%;" align="left">
+<img src=".\img\5.png" alt="12" style="zoom: 45%;" >
   头像修改功能：
 
   采用createObjectURL函数将获取到的文件路径转为url并通过调用接口传到数据库中，然后上传成功后返回修改界面再次调用个人信息获取接口，实现头像更新。
@@ -196,8 +196,8 @@
             router.push("/me");
           });
 ```
-<img src=".\img\6.png" alt="12" style="zoom: 45%;" align="left">
-<img src=".\img\7.png" alt="12" style="zoom: 45%;" align="left">
+<img src=".\img\6.png" alt="12" style="zoom: 45%;" >
+<img src=".\img\7.png" alt="12" style="zoom: 45%;" >
    4、注册界面
 
    注册功能的实现就是axios调用post请求将输入框的账号密码通过接口发送到后端数据库并保存起来，实现注册功能。
@@ -271,7 +271,7 @@
 
    整个后端由controller、routes、config、models、app.js组成，项目结构如下
 
-   <img src=".\img\1.png" alt="23" style="zoom:95%;" align="left">
+   <img src=".\img\1.png" alt="23" style="zoom:95%;" >
 
    1、config/db.js用于建立数据库连接
 
@@ -435,21 +435,15 @@
 
    | 方法 | 接口                     | 参数                                 | 返回                                                         | 说明                 |
    | ---- | :----------------------- | ------------------------------------ | ------------------------------------------------------------ | -------------------- |
-   | GET  | /user/select             | url传参: username                    | 成功返回200，已找到该用户，用户对象。失败返回400，该用户不存在。 | 通过用户名查找用户   |
-   | GET  | /user/register           | url传参: username, pwd               | 失败返回400，用户名已存在。成功返回200，注册成功             | 注册用户             |
-   | POST | /user/editUserImg        | url传参： username；body传参：file； | 成功返回200，修改成功，图片url。失败返回400，修改失败。      | 修改用户头像         |
-   | GET  | /product/list            |                                      | 返回所有商品列表                                             | 获取商品列表         |
-   | GET  | /encyclopedia/list       |                                      | 返回所有百科列表                                             | 获取百科列表         |
-   | GET  | /encyclopedia/select     | url传参:  id                         | 返回查找到的百科对象                                         | 获取百科对象         |
-   | GET  | /encyclopedia/detail     | url传参:  id                         | 返回该百科的详细内容                                         | 获取百科内容         |
-   | GET  | /encyclopedia/detailList |                                      | 返回所有详细内容列表                                         | 获取列表中的摘要     |
-   | GET  | /encyclopedia/search     | url传参:  name                       | 返回模糊查询的结果列表                                       | 获取搜索结果         |
-   | GET  | /cart/select             | url传参: productid, cartid           | 失败返回400，该商品不存在，成功返回200，已找到商品项，该商品对象 | 添加购物车的组成部分 |
-   | GET  | /cart/getcartid          | url传参: username                    | 失败返回400，无此购物车，成功返回200，已找到该购物车，该购物车id | 添加购物车的组成部分 |
-   | GET  | /cart/insert             | url传参: productid, cartid           | 失败返回400，该商品已存在，成功返回200，添加成功             | 添加购物车的组成部分 |
-   | GET  | /cart/add                | url传参: productid, cartid           | 失败返回400，该商品不存在，成功返回200，添加成功             | 添加购物车的组成部分 |
-   | GET  | /article/list            |                                      | 获取所有文章列表                                             | 获取所有文章列表     |
-   | GET  | /article/detail          | url传参: id                          | 获取该文章的详细内容                                         | 文章详情页           |
+   | post  | /api/user/             | url传参: username, pwd                    | 成功返回200，注册成功，用户对象。失败返回400，注册失败。 | 用户注册   |
+   | post  | /api/user/login           | url传参: username, pwd               | 失败返回400，密码或用户名错误。成功返回200，登录成功             | 用户登录             |
+   | get | /api/user/info        |    |       | 获取个人信息        |
+   | post  | /api/user/info          |          url传参:  转换后的url                            |              对头像进行修改                             | 修改头像         |
+   | post  | /api/user/info       |         url传参：name，des，school                             | 对个人信息进行修改                                            | 修改个人信息         |
+   | get  | /api/user/comm1     |                          | 获取评论区信息                                         | 获取带回复的评论区信息         |
+   | get  | /api/user/comm2     |                          | 获取评论区信息                                         | 获取不带回复评论区信息         |
+   | post  | /api/user/comm1 |        url传参：des0                              | 发表输入框输入的评论                                         | 发表评论     |
+  
 
 5. 心得体会（结合自己情况具体说明）
 
