@@ -28,16 +28,13 @@
 
 | 讲义章节 | 项目                              | 分数 | 说明                                                         |
 | -------- | :-------------------------------- | :--: | ------------------------------------------------------------ |
-| 4        | 函数式编程                        |  4   | vue将各个阶段调用的函数作为对象属性输出，编写函数式组件调用，其中数据多使用闭包返回 |
-| 5        | 原型继承                          |  4   | 父组件与子组件的传值动态绑定，使用props传值                  |
-| 6        | 正则表达式和错误处理              |  3   | 前端使用正则表达式匹配data，用于element表单的验证            |
+| 4        | 函数式编程                        |  4   | vue将各个阶段调用的函数作为对象属性输出，编写函数式组件调用，其中数据多使用JSON包返回 |
+| 5        | 原型继承                          |  4   | 父组件与子组件的传值动态绑定，使用props传值                  |           |
 | 7        | 模块,require规则                  |  4   | 在node.js后台中，模块化数据库层和接口层的文件，接口层调用数据库层，app.js调用接口层，使用require和import函数实现了各类库的调用 |
-| 8/10     | 浏览器 DOM，浏览器事件处理        |  4   | v-if决定数据是否挂载到DOM，v-on指令监听DOM操作，在methods中定义方法 |
-| 11       | http xhr promise cookie           |  4   | 后端接口类型基本为get，通过req.query获取通过url传递的数据，前端使用axios异步调用接口 |
-| 12       | 表单文件                          |  3   | 注册登录使用提交表单的方式，rules正则表达式错误检测绑定在blur()，元素失去焦点时，表单动态绑定data进行存储 |
-| 12       | 本地存储                          |  4   | 使用localStorage用于用户登录之后各个页面的数据获取与同步，监听在路由地址变化之后重新调用，保存登录状态 |
+| 8/10     | 浏览器 DOM，浏览器事件处理        |  4   | v-if决定数据是否挂载到DOM，v-on指令监听DOM操作，在js中定义方法 |
+| 11       | http xhr promise cookie           |  4   | 后端接口类型基本为get和post，通过req.query获取通过url传递的数据，前端使用axios异步调用接口 |
 | 13       | REST.API                          |  4   | 接口实现restful风格（详见接口文档），使用res.send传输封装好的对象或者数组 |
-| 其他     | 响应式设计(Desktop/Tablet/Mobile) |  3   | 项目只适配移动端，vue项目云打包实现手机端真机运行，但是对于不同机型的适配未做较大改变 |
+| 其他     | 响应式设计(Desktop/Tablet/Mobile) |  3   | 项目只适配移动端，vue网页虚拟运行，但是对于不同机型的适配未做较大改变 |
 
 3. 项目说明
 
@@ -47,301 +44,226 @@
 
    其中子页面包括
 
-   1、首页：
+   1、短视频首页：
 
-   create阶段使用axios调用接口获取各个列表数据，并赋值给动态绑定的数据
+   mounted阶段使用axios调用接口获取评论区数据，并赋值给动态绑定的数据
 
    ```javascript
-   created() {
-   	this.axios.get("http://localhost:3000/article/list").then(
-   		res => {
-   			this.newsList = res.data.list;
-   		});
-   	this.axios.get("http://localhost:3000/product/list").then(
-   		res => {
-   			this.productList = res.data.list;
-   		});
-   	this.axios.get("http://localhost:3000/encyclopedia/list").then(
-   		res => {
-   			this.encyclopediasList = res.data.list;
-   		});
-   	this.axios.get("http://localhost:3000/encyclopedia/detaillist").then(
-   		res => {
-   			this.contentList = res.data.list;
-   		});
-   }
+  onMounted(() => {
+      axios.get("http://localhost:3000/api/user/comm1", {
+
+      }).then(res => {
+
+        state.comList = res.data
+
+      })
+      axios.get("http://localhost:3000/api/user/comm2", {
+
+      }).then(res => {
+
+        state.comList2 = res.data
+        // console.log(state.comList)
+
+      })
+      
+    })
    ```
 
-   中医百科初始时为所有列表信息
+   刚刚打开评论区时的数据显示
 
    <img src=".\img\4.png" alt="4" style="zoom:23%;" /> 
 
-   搜索模块绑定接口实现模糊查询，搜索按钮@click调用接口回传列表绑定到中医百科模块
+   发表评论模块绑定接口实现个人评论发表功能，点击发表图标按钮@click调用接口回传输入框的评论内容至数据库，axios再次调用更新评论区数据。
 
-   列表项为自编组件，通过props传值
 
-   ```javascript
-   props: {
-   	encyclopedias: Object,
-   	contentList: Array
-   },
+    ```javascript
+  const pub = () => {
+      if (state.des0 === "") {
+        console.log("不能发表空白评论！")
+      } else {
+        // state.comListShow=false
+        axios.post("http://localhost:3000/api/user/comm2", {
+          des: state.des0
+        }).then(res => {
+          console.log(res.data)
+          axios.get("http://localhost:3000/api/user/comm2", {
+          }).then(res => {
+            state.comList2 = res.data
+            console.log(state.comList)
+          })
+          //  state.comListShow=true
+        })
+
+      }
+    }
    ```
 
    <img src=".\img\3.jpg" alt="3" style="zoom: 24%;"  align='left'>
 
-   其他两个模块复用模块页，在下面详细解释
+   
 
-   2、百科详情页
+   2、个人资料界面
 
-   该中药的各类信息
+   在mounted阶段axios调用接口获取个人资料并双向绑定渲染在前端页面中。
+
+    ```javascript
+  onMounted(()=>{
+
+      axios.get("http://localhost:3000/api/user/info",{
+        
+      }).then(res=>{
+        // console.log(res.data)
+        state.infoList=res.data      
+        
+        state.nickname=state.infoList[0].name
+        state.cardId=state.infoList[0].cardID
+        state.des=state.infoList[0].des
+        state.school=state.infoList[0].school
+        if(store.state.imgIndex===0){
+        state.url=require('../assets/img/head.jpg')
+        }else{
+          state.url=state.infoList[0].imgUrl
+        }
+      })
+  })
+   ```
 
    <img src=".\img\12.png" alt="12" style="zoom: 45%;" align="left">
 
-   根据浏览器绑定的id(this.$route.params.id)传参Param调用接口获取百科内容
+   3、个人资料修改界面
 
-   3、资讯页
+   首先在mounted阶段通过axios调用接口获取个人资料信息
 
-   调用接口获取列表，父子组件传值，展示所有资讯
+    ```javascript
+  onMounted(() => {
+      axios.get("http://localhost:3000/api/user/info", {}).then((res) => {
+        // console.log(res.data)
+        state.infoList = res.data;
+        console.log(state.infoList);
+        state.nickname = state.infoList[0].name;
+        state.cardId = state.infoList[0].cardID;
+        state.des = state.infoList[0].des;
+        state.school = state.infoList[0].school;
+        if(store.state.imgIndex===0){
+        state.url=require('../assets/img/head.jpg')
+        }else{
+          state.url=state.infoList[0].imgUrl
+        }
+        
+      });
+    });
+   ```
 
-   <img src=".\img\5.png" alt="5" style="zoom: 25%;" /> 
+  axios发送修改个人资料post请求，对数据库个人信息进行修改
 
-   4、资讯详情页
+ ```javascript
+  axios.post("http://localhost:3000/api/user/info", {
+            name: state.nickname,
+            cardID: state.cardId,
+            des: state.des,
+            school: state.school,
+            imgUrl:state.url,
+          })
+          .then((res) => {
+            store.state.imgIndex=1
+            console.log("修改成功！");
+            router.push("/me");
+          });
+   ```
 
-   ①该资讯的全部内容
+  头像修改功能：
 
-   <img src=".\img\9.png" alt="9" style="zoom: 47%;" /> 
+  采用createObjectURL函数将获取到的文件路径转为url并通过调用接口传到数据库中，然后上传成功后返回修改界面再次调用个人信息获取接口，实现头像更新。
+```javascript
+  const change = () => {
+      state.file = document.getElementById("file").files[0];
+      state.url = window.URL.createObjectURL(state.file);
+      console.log(state.url);
+      console.log("头像修改成功！");
+    };
+```
+ ```javascript
+  axios.post("http://localhost:3000/api/user/info", {
+            name: state.nickname,
+            cardID: state.cardId,
+            des: state.des,
+            school: state.school,
+            imgUrl:state.url,
+          })
+          .then((res) => {
+            store.state.imgIndex=1
+            console.log("修改成功！");
+            router.push("/me");
+          });
+   ```
+   4、注册界面
 
-   ②该资讯的上一篇和下一篇跳转链接（没有就不显示该模块）
-
-   绑定@click跳转路由，路由id传参重新获取列表
-
-   <img src=".\img\10.png" alt="10" style="zoom:24%;" /> 
-
-   ③其他推荐的资讯（固定显示3篇）
-
-   获取的列表中id不为本页路由id的文章
-
-   <img src=".\img\11.png" alt="11" style="zoom:24%;" /> 
-
-   5、商城页
-
-   调用接口获取商品列表，两个列表分别v-for两个组件，父子组件传值
-
-   ①热卖的商品，固定两件
-
-   <img src=".\img\6.png" alt="6" style="zoom: 25%;" /> 
-
-   ②所有商品
-
-   <img src=".\img\7.png" alt="7" style="zoom: 39%;" /> 
-
-   购物车具有购买的功能，点击按钮调用接口存储
-
-   <img src=".\img\25.jpg" alt="25" style="zoom:25%;" align="left">
-
-   6、注册页
+   注册功能的实现就是axios调用post请求将输入框的账号密码通过接口发送到后端数据库并保存起来，实现注册功能。
+```JavaScript
+   const res =()=>{
+       if (state.username == ""){
+         console.log("账号不能为空")
+       }else if (state.password == ""){
+         console.log("密码不能为空")
+       }else{
+        //  console.log(state)
+         axios.post("http://localhost:3000/api/user",{
+           username : state.username,
+           password : state.password
+         }).then(res=>{
+           console.log(res.data)
+           console.log("注册成功，请登录！！")
+           router.push("/sign")
+         })
+       }
+       
+    }
+```
 
    <img src=".\img\13.png" alt="13" style="zoom:23%;" /> 
 
-   点击重置清空本地v-model绑定的对象
 
-   点击注册提交表单验证，验证失败不调用接口，验证成功调用接口
+   7、登录界面
 
-   验证规则
+   登录功能同样使用的是post请求调用，将输入框双向绑定读入到的数据通过接口发送到后端进行匹配验证，根据后端sql精准查询，若能查询到数据，则将数据传送回前台，前台根据是否有回传数据来判断是否登录成功。
 
-   ```javascript
-   rules: {
-   	id: [{
-   		required: true,
-   		message: '请输入用户名',
-   		trigger: 'blur'
-   	}],
-   	pwd: [{
-   		required: true,
-   		message: '请输入密码',
-   		trigger: 'blur'
-   	}],
-   	cfpwd: [{
-   		required: true,
-   		validator: validatePassword,
-   		trigger: 'blur'
-   	}]
-   }
-   ```
-
-   添加失败返回状态为400，成功返回状态为200
-
-   ```javascript
-   //用户注册
-   register = (req, res) => {
-     let username = req.query.username;
-     let pwd = req.query.pwd;
-     var sql = "insert into user (username,pwd) values(?,?)";
-     var sqlArr = [username, pwd];
-     var callBack = (err, data) => {
-       if (err) {
-         console.log("用户名已存在");
-         res.send({
-           code: 400,
-           msg: "用户名已存在",
-         });
-       } else {
-         res.send({
-           code: 200,
-           msg: "注册成功",
-           list: data,
-         });
-       }
-     };
-     dbConfig.sqlConnect(sql, sqlArr, callBack);
-   };
-   ```
-
-   根据返回状态提示消息弹框
-
-   ```javascript
-   this.axios.get("http://localhost:3000/users/register?username="+this.Form.id+"&pwd="+this.Form.pwd).then(
-   	res => {
-   		if(res.data.code==200){
-   			this.$message({
-   				type: 'success',
-   				message: res.data.msg
-   			});
-   		}
-   		else{
-   			this.$message({
-   				type: 'error',
-   				message: res.data.msg
-   			});
-   		}
-   });
-   ```
-
-   <img src=".\img\16.jpg" alt="16" style="zoom:25%;" align="left">
-
-   <img src=".\img\17.jpg" alt="17" style="zoom:25%;" align="left">
-
-   7、登录页
-
-   传参username直接返回整个用户对象，大体与注册相同，先判断该用户是否存在，再判断获取的对象和绑定的输入密码是否相同
-
-   <img src="D:\计算机科学\study2021上\跨平台脚本开发技术\大作业\img\14.png" alt="14" style="zoom:40%;" /> 
-
-   通过data.length判断是否查找到用户
-
-   ```javascript
-   //用户获取
-   getByUsername = (req, res) => {
-     let { username } = req.query;
-     var sql = "select * from user where username=?";
-     var sqlArr = [username];
-     var callBack = (err, data) => {
-       if (err) {
-         console.log("寻找有误");
-       } else {
-         if (data.length != 0) {
-           res.send({
-             code: 200,
-             msg: "已找到该用户",
-             list: data,
-           });
-         } else {
-           res.send({
-             code: 400,
-             msg: "该用户不存在",
-             list: data,
-           });
-         }
-       }
-     };
-     dbConfig.sqlConnect(sql, sqlArr, callBack);
-   };
-   ```
-
-   若登录成功将对象转换成JSON格式存储到localstorage，并跳转路由
-
-   ```javascript
-   this.axios.get("http://localhost:3000/users/select?username=" + this.Form.id).then(
-   	res => {
-   		console.log(res.data);
-   		if (res.data.code == 200) {
-   			var user = res.data.list[0];
-   			if (user.pwd == this.Form.pwd) {
-   				localStorage.setItem("user", JSON.stringify(user));
-   				this.$router.push({
-   					path: '/home',
-   				});
-   				this.$message({
-   					type: 'success',
-   					message: '登录成功'
-   				});
-   			} else {
-   				this.$message({
-   					type: 'error',
-   					message: '密码错误'
-   				});
-   			}
-   		} else {
-   			this.$message({
-   				type: 'error',
-   				message: '用户名错误'
-   			});
-   		}
-   });
-   ```
-
-   主页监听路由，变换重新获取localstorage
-
-   ```javascript
-   watch: {
-   	$route: function(newVal, oldVal) {
-   		if (localStorage.getItem("user") != null) {
-   			this.user = JSON.parse(localStorage.getItem("user"));
-   			console.log(typeof(this.user));
-   		}
-   		document.documentElement.scrollTop = 0;
-   		document.body.scrollTop = 0;
-   	}
-   }
-   ```
-
-   <img src=".\img\18.jpg" alt="18" style="zoom:25%;" align="left">
-
-   <img src=".\img\19.jpg" alt="19" style="zoom:25%;" align="left">
-
-   <img src=".\img\20.jpg" alt="20" style="zoom:25%;" align="left">
-
-   
-
-   8、个人页
-
-   父页面获取localstorage传递给子页面
-
-   <img src=".\img\8.png" alt="8" style="zoom: 45%;" /> 
-
-   有修改头像的功能
-
-   <img src=".\img\24.jpg" alt="24" style="zoom:25%;" align="left">
-
-   商品详情页单独分了出来，有返回首页和返回商城页的功能
-
-   创建时获取商品列表
-
-   通过url绑定id判断是否显示获取的对象
-
-   <img src=".\img\15.png" alt="15" style="zoom:40%;" /> 
-
-   其他：
-
-   topbar组件通过v-if判断应该显示哪个模块，注销按钮清空localstorage
-
-   未登录时
-
-   <img src=".\img\21.png" alt="21" style="zoom: 22%;" /> 
-
-   登录之后
-
-   <img src=".\img\22.png" alt="22" style="zoom:22%;" /> 
+```JavaScript
+   axios
+          .post("http://localhost:3000/api/user/login", {
+            username: state.username,
+            password: state.password,
+          })
+          .then((res) => {       
+            // console.log(res.data);
+            if(res.data.length===1){
+              router.push("/me")
+              console.log("登录成功！！");
+            }else{
+              console.log("账号或密码错误！！");
+            }
+          });
+```
+  后端验证规则：
+```javascript
+exports.findAll=(req,res)=>{
+    const user={
+        username:req.body.username,
+        password:req.body.password
+    };
+    User.findAll({
+        where:{
+            username:{
+                [Op.eq]:user.username
+            },
+            password:{
+                [Op.eq]:user.password
+            },
+        }
+    }).then((data)=>{
+        res.send(data)
+    })
+}
+```
 
 4. 解决技术要点说明
 
@@ -349,174 +271,163 @@
 
    <img src=".\img\1.png" alt="23" style="zoom:95%;" align="left">
 
-   1、util/dbconfig.js用于创建连接池，建立数据库连接
+   1、config/db.js用于建立数据库连接
 
    ```javascript
-   const mysql = require("mysql");
-   
-   //数据库配置
-   const config = {
-     host: "localhost",
-     port: "3306",
-     user: "root",
-     password: "123456",
-     database: "zyserver",
-     multipleStatements: true
-   };
-   
-   //连接数据库，使用mysql的连接池连接方式
-   var pool = mysql.createPool(config);
-   module.exports = {
-     pool: pool,
-     //连接池对象
-     sqlConnect: function (sql, sqlArr, callBack) {
-       pool.getConnection((err, conn) => {
-         if (err) {
-           console.log("连接失败");
-           return;
-         }
-         //事件驱动回调
-         conn.query(sql, sqlArr, callBack);
-         //释放连接
-         conn.release();
-       });
-     },
-   };
+   module.exports={
+    HOST:"localhost",
+    USER:"root",
+    PASSWORD:"123456",
+    DB:"tiktok",
+    dialect:'mysql',}
    ```
 
    并将对象模块化，可在其它文件内调用
 
+```javascript
+const sequelize = new Sequelize(
+    db.DB,
+    db.USER,
+    db.PASSWORD,
+    {
+        host:db.HOST,
+        dialect:db.dialect
+    }
+)
+const dbdb={};
+dbdb.sequelize=sequelize;
+dbdb.Sequelize=Sequelize;
+dbdb.User=require('../models/user.js')(sequelize,Sequelize)
+dbdb.Information=require('../models/info.js')(sequelize,Sequelize)
+dbdb.Comment1=require('../models/Com_1.js')(sequelize,Sequelize)
+dbdb.Comment2=require('../models/Com_2.js')(sequelize,Sequelize)
+dbdb.Video=require('../models/video.js')(sequelize,Sequelize)
+module.exports=dbdb
+```
+
    2、controller编写接口，调用数据库
 
-   以获取百科为例
+   以个人信息获取和修改为例
 
    ```javascript
-   //获取百科
-   getEncy = (req, res) => {
-     let { id } = req.query;
-     var sql = "select * from encyclopedia where id=?";
-     var sqlArr = [id];
-     var callBack = (err, data) => {
-       if (err) {
-         console.log("百科获取失败");
-       } else {
-         res.send({
-           list: data,
-         });
-       }
-     };
-     dbConfig.sqlConnect(sql, sqlArr, callBack);
-   };
+exports.findAll=(req,res)=>{//获取个人信息
+    Info.findAll().then((data)=>{
+        res.send(data)
+    })
+    
+}
+exports.update=(req,res)=>{//修改个人信息
+    Info.update({
+        name:req.body.name,
+        cardID:req.body.cardID,
+        des:req.body.des,
+        school:req.body.school,
+        imgUrl:req.body.imgUrl
+    },{
+    where:{
+        id:"1"
+    }
+    }
+ ).then((data)=>{
+    res.send(data)
+})
+}
    ```
 
    req为接收到的传参，res为返回的数据
 
-   3、routes汇总接口
+   3、models进行数据库建表
 
-   以article为例
+   以评论区表为例
 
    ```javascript
-   var express = require('express');
-   var router = express.Router();
-   var article = require('../controller/ArticleController')
-   
-   router.get('/list', article.getArticle);
-   router.get('/detail', article.getArticleDetail);
-   
-   module.exports = router;
+   module.exports=(sequelize,Sequelize)=>{
+    const Comment1=sequelize.define("commment1",{
+        name:{
+            type:Sequelize.STRING
+        },
+        time:{
+            type:Sequelize.STRING
+        },
+        des:{
+            type:Sequelize.STRING
+        },
+        zan:{
+            type:Sequelize.STRING
+        },
+        name1:{
+            type:Sequelize.STRING
+        },
+        time1:{
+            type:Sequelize.STRING
+        },
+        des1:{
+            type:Sequelize.STRING
+        },
+        zan1:{
+            type:Sequelize.STRING
+        },
+        more:{
+            type:Sequelize.STRING
+        }
+    })
+    return Comment1
+}
    ```
 
-   4、app.js配置并启动后台
+   4、app.js配置跨域并启动后台
 
    引入接口文件
 
    ```javascript
-   var indexRouter = require("./routes/index");
-   var usersRouter = require("./routes/users");
-   var articleRouter = require("./routes/article");
-   var productRouter = require("./routes/product");
-   var encyclopediaRouter = require("./routes/encyclopedia");
-   var cartRouter = require("./routes/cart");
-   ```
+   const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const app = express();
+var corsOptions = {
+    origin: "http://localhost:8080"
+};
+app.use(cors(corsOptions));
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+const db = require("./app/models");
+db.sequelize.sync()
+require("./app/routes/userRou")(app)
 
-
-   将引入的接口配置到路径下，配置路由
-
-   ```javascript
-   app.use("/", indexRouter);
-   app.use("/users", usersRouter);
-   app.use("/article", articleRouter);
-   app.use("/product", productRouter);
-   app.use("/encyclopedia", encyclopediaRouter);
-   app.use("/cart", cartRouter);
-   
-   server.listen(3000);
+app.listen(3000,()=>{
+    console.log("项目运行成功：http://localhost:3000")
+})
    ```
 
    端口默认3000
 
-   5、上传头像关键代码
+   5、routes/userRou.js汇总路由接口并配置
 
-   接口实现
+```javascript
+   module.exports = app =>{
+    const user = require("../controllers/userCon.js");
+    const info = require("../controllers/infoCon.js")
+    const comm1 = require("../controllers/Com1Con.js")
+    const comm2 = require("../controllers/Com2Con.js")
+    const video = require("../controllers/VideoCon.js")
+    var router = require("express").Router();
+    router.post("/",user.create)//注册
+    router.post("/login",user.findAll)//登录
+    router.get("/info",info.findAll)//获取个人资料
+    router.post("/info",info.update)//修改个人资料
+    router.get("/comm1",comm1.findAll)//获取评论区1
+    router.get("/comm2",comm2.findAll)//获取评论区2
+    router.post("/comm2",comm2.create)//发表个人评论
+    router.get("/video",video.findAll)//获取视频列表
+    app.use('/api/user',router)
+    
+}
+```
 
-   ```javascript
-   //图片上传
-   let editUserImg = (req,res)=>{
-     if(req.file.length === 0){
-         res.render('error',{message:'上传文件不能为空！'});
-     }else{
-         let file = req.file;
-         console.log(file);
-         fs.renameSync('./public/uploads/'+file.filename,'./public/uploads/'+file.originalname);
-         res.set({
-             'content-type':'application/JSON; charset=utf-8'
-         })
-         let {username}=req.query;
-         let imgUrl = 'http://192.168.43.178:3000/public/uploads/'+file.originalname;
-         //let imgUrl = 'http://localhost:3000/public/uploads/'+file.originalname;
-         let sql =`update user set headimg=? where username=?`;
-         let sqlArr = [imgUrl,username];
-         dbConfig.sqlConnect(sql,sqlArr,(err,data)=>{
-             if(err){
-                 console.log(err);
-                 throw '出错了';
-             }else{
-                 if(data.affectedRows == 1){
-                     res.send({
-                         code:200,
-                         msg:'修改成功',
-                         url:imgUrl
-                     })
-                 }else{
-                     res.send({
-                         code:400,
-                         msg:'修改失败'
-                     })
-                 }
-             }
-         })
-     }
-   }
-   ```
-
-   依赖引入
-
-   ```javascript
-   let fs = require('fs');
-   let multer = require('multer');
-   let upload = multer({dest:'./public/uploads/'}).single("file");
-   ```
-
-   静态资源配置
-
-   ```javascript
-   //静态资源
-   app.use(express.static(path.resolve(__dirname, 'public')));
-   app.use('/public', express.static('public'));
-   ```
-
-   5、接口文档
+   6、接口文档
 
    本项目接口使用restful风格，具体如下：
 
