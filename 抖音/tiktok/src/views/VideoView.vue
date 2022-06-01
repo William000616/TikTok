@@ -97,7 +97,7 @@
                       <span class="iconfont icon-aixin">
                         <p>{{ item.zan }}</p>
                       </span>
-                    </div>
+                    </div>              
                   </div>
                 </div>
               </div>

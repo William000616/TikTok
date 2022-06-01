@@ -25,6 +25,10 @@
 | 黄吉祥 | 31901108 | 计算机1904班 | 为抖音App前端传输数据，数据库设计及后端接口的编写 |  1.0 |
 | 高政杰 | 31901226 | 软工1904班 | 为抖音App前端传输数据，后端接口调试及上传文件等复杂接口的编写 |  0.9 |
 
+git提交记录
+
+<img src="./img/2.png" alt="4" style="zoom:23%;" />
+
 2. 项目自我评估表
 
 | 讲义章节 | 项目                              | 分数 | 说明                                                         |
@@ -174,12 +178,26 @@
 
   采用createObjectURL函数将获取到的文件路径转为url并通过调用接口传到数据库中，然后上传成功后返回修改界面再次调用个人信息获取接口，实现头像更新。
 ```javascript
-  const change = () => {
-      state.file = document.getElementById("file").files[0];
-      state.url = window.URL.createObjectURL(state.file);
-      console.log(state.url);
-      console.log("头像修改成功！");
-    };
+  function doUpload() {
+      let file = $('#file').get(0).files[0];
+      console.log(file)
+      //创建空的formData对象
+      let formdata = new FormData();
+      //  formdata.append的属性名 要和后端保持一致 `file`
+      formdata.append('file', file);
+      $.ajax({
+          url: 'http://localhost:3000/api/user/uploadImage',
+          type: 'POST',
+          data: formdata,
+          contentType: false,
+          processData:false,
+          success: function (data) {
+              console.log(data)
+              $('img').attr('src', data.data.url);
+          }
+      }
+      )
+  }
 ```
 ```javascript
   axios.post("http://localhost:3000/api/user/info", {
@@ -190,7 +208,7 @@
             imgUrl:state.url,
           })
           .then((res) => {
-            store.state.imgIndex=1
+            
             console.log("修改成功！");
             router.push("/me");
           });
@@ -434,15 +452,16 @@
 
    | 方法 | 接口                     | 参数                                 | 返回                                                         | 说明                 |
    | ---- | :----------------------- | ------------------------------------ | ------------------------------------------------------------ | -------------------- |
-   | post  | /api/user/             | url传参: username, pwd                    | 成功返回200，注册成功，用户对象。失败返回400，注册失败。 | 用户注册   |
-   | post  | /api/user/login           | url传参: username, pwd               | 失败返回400，密码或用户名错误。成功返回200，登录成功             | 用户登录             |
+   | post  | /api/user/             | 传参: username, pwd                    | 成功返回200，注册成功，用户对象。失败返回400，注册失败。 | 用户注册   |
+   | post  | /api/user/login           | 传参: username, pwd               | 失败返回400，密码或用户名错误。成功返回200，登录成功             | 用户登录             |
    | get | /api/user/info        |    |       | 获取个人信息        |
-   | post  | /api/user/info          |          url传参:  转换后的url                            |              对头像进行修改                             | 修改头像         |
-   | post  | /api/user/info       |         url传参：name，des，school                             | 对个人信息进行修改                                            | 修改个人信息         |
+   | post  | /api/user/info          |          传参:  转换后的url                            |              对头像进行修改                             | 修改头像         |
+   | post  | /api/user/info       |         传参：name，des，school                             | 对个人信息进行修改                                            | 修改个人信息         |
    | get  | /api/user/comm1     |                          | 获取评论区信息                                         | 获取带回复的评论区信息         |
    | get  | /api/user/comm2     |                          | 获取评论区信息                                         | 获取不带回复评论区信息         |
-   | post  | /api/user/comm1 |        url传参：des0                              | 发表输入框输入的评论                                         | 发表评论     |
-  
+   | post  | /api/user/comm1 |        传参：des0                              | 发表输入框输入的评论                                         | 发表评论     |
+   | post  | /api/user/uploadImage |        url传参：文件file                              | 修改个人资料的头像                                         | 修改头像     |
+
 
 5. 心得体会（结合自己情况具体说明）
 
@@ -477,19 +496,57 @@
           module.exports=dbdb
 ```
      
-      2、上传文件路径转url没思路
+      2、修改头像没思路
 
-      解决：采用createObjectURL函数将获取到的文件路径转为url并通过调用接口传到数据库中。
+      解决：先将上传的文件放到后端文件夹里，采用函数将获取到的文件路径，转为url并通过调用接口传到数据库中。
 
 ```javascript
-  const change = () => {
-      state.file = document.getElementById("file").files[0];
-      state.url = window.URL.createObjectURL(state.file);
-      console.log(state.url);
-      console.log("头像修改成功！");
-    };
+  function doUpload() {
+      let file = $('#file').get(0).files[0];
+      console.log(file)
+      //创建空的formData对象
+      let formdata = new FormData();
+      //  formdata.append的属性名 要和后端保持一致 `file`
+      formdata.append('file', file);
+      $.ajax({
+          url: 'http://localhost:3000/api/user/uploadImage',
+          type: 'POST',
+          data: formdata,
+          contentType: false,
+          processData:false,
+          success: function (data) {
+              console.log(data)
+              $('img').attr('src', data.data.url);
+          }
+      }
+      )
+  }
 ```
-
+```javascript
+  // 上传图片接口
+    router.post('/uploadImage', (req, res) => {
+    upload(req, res).then(imgsrc => {
+      // 上传成功 存储文件路径 到数据库中
+      // swq sql需要修改一下，变成新增，这里测试暂用更新
+      let sql = `UPDATE information SET imgUrl='${imgsrc}'WHERE id='1' `
+      query(sql, (err, results) => {
+        if (err) {
+          formatErrorMessage(res, err)
+        } else {
+          res.send({
+            "code": "ok",
+            "message": "上传成功",
+            'data': {
+              url: imgsrc
+            }
+          })
+        }
+      })
+    }).catch(err => {
+      formatErrorMessage(res, err.error)
+    })
+  })
+```
        
      - 本课程建议
      
