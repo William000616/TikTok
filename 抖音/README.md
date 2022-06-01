@@ -39,7 +39,7 @@ git提交记录
 | 8/10     | 浏览器 DOM，浏览器事件处理        |  4   | v-if决定数据是否挂载到DOM，v-on指令监听DOM操作，在js中定义方法 |
 | 11       | http xhr promise cookie           |  4   | 后端接口类型基本为get和post，通过req.query获取通过url传递的数据，前端使用axios异步调用接口 |
 | 13       | REST.API                          |  4   | 接口实现restful风格（详见接口文档），使用res.send传输封装好的对象或者数组 |
-| 其他     | 响应式设计(Desktop/Tablet/Mobile) |  3   | 项目只适配移动端，vue网页虚拟运行，但是对于不同机型的适配未做较大改变 |
+| 其他     | 响应式设计(Desktop/Tablet/Mobile) |  3   | 项目只适配移动端，网页上模拟运行app，但是对于不同机型的适配未做较大改变 |
 
 3. 项目说明
 
