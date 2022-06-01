@@ -7,6 +7,7 @@ var corsOptions = {
 };
 app.use(cors(corsOptions));
 
+app.use('/img/', express.static('./public/'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true

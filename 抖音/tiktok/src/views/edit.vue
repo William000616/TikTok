@@ -14,7 +14,7 @@
             type="file"
             id="file"
             class="hide"
-            @change="change"
+            @change="doUpload"
           />点击更换头像
         </p>
       </div>
@@ -77,6 +77,8 @@ import TopBar4 from "../components/TopBar4.vue";
 import { reactive, toRefs, onMounted,onBeforeUpdate } from "vue";
 import store from "../store/index.js"
 import axios from "axios";
+import $ from "jquery";
+
 import { useRouter } from "vue-router";
 export default {
   components: {
@@ -102,11 +104,11 @@ export default {
         state.cardId = state.infoList[0].cardID;
         state.des = state.infoList[0].des;
         state.school = state.infoList[0].school;
-        if(store.state.imgIndex===0){
-        state.url=require('../assets/img/head.jpg')
-        }else{
+        // if(store.state.imgIndex===0){
+        // state.url=require('../assets/img/head.jpg')
+        // }else{
           state.url=state.infoList[0].imgUrl
-        }
+        // }
         
       });
     });
@@ -124,7 +126,6 @@ export default {
             cardID: state.cardId,
             des: state.des,
             school: state.school,
-            imgUrl:state.url,
           })
           .then((res) => {
             store.state.imgIndex=1
@@ -133,16 +134,30 @@ export default {
           });
       }
     };
-    const change = () => {
-      state.file = document.getElementById("file").files[0];
-      state.url = window.URL.createObjectURL(state.file);
-      console.log(state.url);
-      console.log("头像修改成功！");
-    };
+    function doUpload() {
+      let file = $('#file').get(0).files[0];
+      console.log(file)
+      //创建空的formData对象
+      let formdata = new FormData();
+      //  formdata.append的属性名 要和后端保持一致 `file`
+      formdata.append('file', file);
+      $.ajax({
+          url: 'http://localhost:3000/api/user/uploadImage',
+          type: 'POST',
+          data: formdata,
+          contentType: false,
+          processData:false,
+          success: function (data) {
+              console.log(data)
+              $('img').attr('src', data.data.url);
+          }
+      }
+      )
+  }
     return {
       ...toRefs(state),
       edit,
-      change,
+      doUpload
     };
   },
 };

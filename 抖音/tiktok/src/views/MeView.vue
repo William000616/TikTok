@@ -229,11 +229,11 @@ export default {
         state.cardId=state.infoList[0].cardID
         state.des=state.infoList[0].des
         state.school=state.infoList[0].school
-        if(store.state.imgIndex===0){
-        state.url=require('../assets/img/head.jpg')
-        }else{
+        // if(store.state.imgIndex===0){
+        // state.url=require('../assets/img/head.jpg')
+        // }else{
           state.url=state.infoList[0].imgUrl
-        }
+        // }
       })
       
       

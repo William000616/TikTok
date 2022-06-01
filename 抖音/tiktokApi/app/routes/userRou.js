@@ -1,4 +1,6 @@
 module.exports = app =>{
+    const upload = require('../multer/upload.js');
+    const query = require('../config/db1.js')
     const user = require("../controllers/userCon.js");
     const info = require("../controllers/infoCon.js")
     const comm1 = require("../controllers/Com1Con.js")
@@ -14,5 +16,34 @@ module.exports = app =>{
     router.post("/comm2",comm2.create)//发表个人评论
     router.get("/video",video.findAll)//获取视频列表
     app.use('/api/user',router)
-    
+    // 上传图片接口
+    router.post('/uploadImage', (req, res) => {
+    upload(req, res).then(imgsrc => {
+      // 上传成功 存储文件路径 到数据库中
+      // swq sql需要修改一下，变成新增，这里测试暂用更新
+      let sql = `UPDATE information SET imgUrl='${imgsrc}'WHERE id='1' `
+      query(sql, (err, results) => {
+        if (err) {
+          formatErrorMessage(res, err)
+        } else {
+          res.send({
+            "code": "ok",
+            "message": "上传成功",
+            'data': {
+              url: imgsrc
+            }
+          })
+        }
+      })
+    }).catch(err => {
+      formatErrorMessage(res, err.error)
+    })
+  })
+  // 格式化错误信息
+  function formatErrorMessage(res, message,) {
+    res.status(500).send({
+      "code": "error",
+      "message": message || '',
+    });
+  }
 }
