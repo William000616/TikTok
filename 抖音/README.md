@@ -22,8 +22,8 @@
 
 | 姓名   |   学号   |       班级 |                  任务 | 权重 |
 | :----- | :------: | ---------: | --------------------: | ---: |
-| 黄吉祥 | 31901108 | 计算机1904 | 为抖音App前端传输数据，数据库设计及后端接口的编写 |  1.0 |
-| 高政杰 | 31901226 | 软工1904 | 负责前端对接口的使用和调试 |  0.9 |
+| 黄吉祥 | 31901108 | 计算机1904班 | 为抖音App前端传输数据，数据库设计及后端接口的编写 |  1.0 |
+| 高政杰 | 31901226 | 软工1904班 | 为抖音App前端传输数据，后端接口调试及上传文件等复杂接口的编写 |  0.9 |
 
 2. 项目自我评估表
 
@@ -145,11 +145,9 @@
         state.cardId = state.infoList[0].cardID;
         state.des = state.infoList[0].des;
         state.school = state.infoList[0].school;
-        if(store.state.imgIndex===0){
-        state.url=require('../assets/img/head.jpg')
-        }else{
-          state.url=state.infoList[0].imgUrl
-        }
+
+        state.url=state.infoList[0].imgUrl
+
         
       });
     });
