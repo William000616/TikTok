@@ -27,7 +27,7 @@
 
 git提交记录
 
-<img src="./img/2.png" alt="4" style="zoom:23%;" />
+<img src="./img/7.png" alt="4" style="zoom:23%;" />
 
 2. 项目自我评估表
 
@@ -74,9 +74,11 @@ git提交记录
     })
 ```
 
-   刚刚打开评论区时的数据显示
+   刚刚打开评论区时的数据显示：
 
    <img src="./img/2.png" alt="4" style="zoom:23%;" /> 
+
+   发表评论功能：
 
    发表评论模块绑定接口实现个人评论发表功能，点击发表图标按钮@click调用接口回传输入框的评论内容至数据库，axios再次调用更新评论区数据。
 
@@ -105,7 +107,11 @@ git提交记录
 
    <img src=".\img\3.png" alt="3" style="zoom: 24%;"  >
 
-   
+   删除评论功能：
+
+   删除评论模块绑定接口实现评论删除功能，点击删除按钮@click调用接口到后端对数据库对应数据做删除操作，axios再次调用更新评论区数据。
+
+   <img src=".\img\3.png" alt="3" style="zoom: 24%;"  >
 
    2、个人资料界面
 
@@ -442,7 +448,29 @@ git提交记录
     router.post("/comm2",comm2.create)//发表个人评论
     router.get("/video",video.findAll)//获取视频列表
     app.use('/api/user',router)
-    
+    // 上传图片接口
+    router.post('/uploadImage', (req, res) => {
+    upload(req, res).then(imgsrc => {
+      // 上传成功 存储文件路径 到数据库中
+      // swq sql需要修改一下，变成新增，这里测试暂用更新
+      let sql = `UPDATE information SET imgUrl='${imgsrc}'WHERE id='1' `
+      query(sql, (err, results) => {
+        if (err) {
+          formatErrorMessage(res, err)
+        } else {
+          res.send({
+            "code": "ok",
+            "message": "上传成功",
+            'data': {
+              url: imgsrc
+            }
+          })
+        }
+      })
+    }).catch(err => {
+      formatErrorMessage(res, err.error)
+    })
+  })
   }
 ```
 
@@ -459,7 +487,8 @@ git提交记录
    | post  | /api/user/info       |         传参：name，des，school                             | 对个人信息进行修改                                            | 修改个人信息         |
    | get  | /api/user/comm1     |                          | 获取评论区信息                                         | 获取带回复的评论区信息         |
    | get  | /api/user/comm2     |                          | 获取评论区信息                                         | 获取不带回复评论区信息         |
-   | post  | /api/user/comm1 |        传参：des0                              | 发表输入框输入的评论                                         | 发表评论     |
+   | post  | /api/user/comm2 |        传参：des0                              | 发表输入框输入的评论                                         | 发表评论     |
+      | post  | /api/user/comm2 |                                     | 删除对应的评论                                         | 删除评论     |
    | post  | /api/user/uploadImage |        url传参：文件file                              | 修改个人资料的头像                                         | 修改头像     |
 
 
