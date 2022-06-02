@@ -50,7 +50,7 @@
           ></span
         >
       </div>
-      <div class="edit-item">
+      <div   class="edit-item">
         <span class="label">性别</span>
         <span>男<span class="icon">></span></span>
       </div>
