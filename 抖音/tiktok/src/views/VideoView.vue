@@ -88,16 +88,18 @@
                       <p class="name">{{ item.name }}</p>
                       <p class="reply-des">
                         {{ item.des }}<span class="time">{{ item.time }}</span>
+                        <span @click="del(item.id)" class="dele">删除</span>
                       </p>
                     </div>
                     <div class="zan">
-                      <div @click="del(item.id)">删除</div>
+                      
                       <svg class="icon0" aria-hidden="true">
                         <use xlink:href="#icon-dianzan"></use>
                       </svg>
                       <span class="iconfont icon-aixin">
                         <p>{{ item.zan }}</p>
                       </span>
+                      
                     </div>              
                   </div>
                 </div>
@@ -336,7 +338,10 @@ export default {
   fill: #fff;
   opacity: 0.5;
 }
-
+.dele{
+  // width: 30px;
+  margin-left: 23px;
+}
 .button {
   position: absolute;
   z-index: 1000;
