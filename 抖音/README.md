@@ -111,7 +111,21 @@ git提交记录
 
    删除评论模块绑定接口实现评论删除功能，点击删除按钮@click调用接口到后端对数据库对应数据做删除操作，axios再次调用更新评论区数据。
 
-   <img src=".\img\3.png" alt="3" style="zoom: 24%;"  >
+```javascript
+    const del = (id) =>{
+      axios.post("http://localhost:3000/api/user/delete", {
+          id: id
+        }).then(res => {
+          console.log(res.data)
+          axios.get("http://localhost:3000/api/user/comm2", {
+          }).then(res => {
+            state.comList2 = res.data
+            console.log(state.comList)
+          })
+          //  state.comListShow=true
+        })
+    }
+```
 
    2、个人资料界面
 
@@ -488,7 +502,7 @@ git提交记录
    | get  | /api/user/comm1     |                          | 获取评论区信息                                         | 获取带回复的评论区信息         |
    | get  | /api/user/comm2     |                          | 获取评论区信息                                         | 获取不带回复评论区信息         |
    | post  | /api/user/comm2 |        传参：des0                              | 发表输入框输入的评论                                         | 发表评论     |
-      | post  | /api/user/comm2 |                                     | 删除对应的评论                                         | 删除评论     |
+      | post  | /api/user/delete |                                     | 删除对应的评论                                         | 删除评论     |
    | post  | /api/user/uploadImage |        url传参：文件file                              | 修改个人资料的头像                                         | 修改头像     |
 
 
@@ -497,7 +511,7 @@ git提交记录
    - 大项目开发过程心得
      - 遇到哪些困难，经历哪里过程，有哪些收获
      
-       1、node.js连接数据库无从下手，觉得过去繁琐
+       1、node.js写接口以及连接数据库无从下手，觉得过于繁琐
 
        解决：
       找到了Sequelize+express数据库框架，便于编写，代码变得十分精炼：
@@ -577,9 +591,9 @@ git提交记录
   })
 ```
        
-     - 本课程建议
+- 本课程建议
      
-       - 课程难度方面，进度方面，课程内容，授课方式等，给出你的意见
+  - 课程难度方面，进度方面，课程内容，授课方式等，给出你的意见
      
-         课程难度适中，但是作为js基础差点的人只能吸收课程的知识点，但是一节课理论一节课实验的模式能帮助我活用知识，但是我觉得node.js讲授的再早一点就好了，在接触nodejs之前一直是用springboot写后端，写的过程非常繁琐且心累。对这门课的建议的话就是希望老师能讲一些动画效果等拓展的js，对于基础的内容讲的更深入一些，虽然node.js写接口其实不是特别主流，但用它写接口感觉特别得心应手，毕竟基础的东西到哪都能用。
+    课程难度适中，但是作为js基础差点的人只能吸收课程的知识点，但是一节课理论一节课实验的模式能帮助我活用知识，但是我觉得node.js讲授的再早一点就好了，在接触nodejs之前一直是用springboot写后端，写的过程非常繁琐且心累。对这门课的建议的话就是希望老师能讲一些动画效果等拓展的js，对于基础的内容讲的更深入一些，虽然node.js写接口其实不是特别主流，但用它写接口感觉特别得心应手，毕竟基础的东西到哪都能用。
 
