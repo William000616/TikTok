@@ -28,7 +28,7 @@
 
 git提交记录
 
-<img src="./img/7.png" alt="4" style="zoom:23%;" />
+<img src="./img/0.png" alt="4" style="zoom:23%;" />
 
 2. 项目自我评估表
 
