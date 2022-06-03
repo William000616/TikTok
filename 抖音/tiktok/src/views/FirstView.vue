@@ -7,7 +7,7 @@
 
 <script>
 import { reactive, toRefs } from "vue";
-import TopBar from "../components/TopBar.vue";
+import TopBar   from "../components/TopBar.vue";
 export default {
   components: {
     TopBar,

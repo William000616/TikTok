@@ -116,7 +116,7 @@ export default {
       
       
     })
-    const edit = () => {
+    const edit   = () => {
       if (state.nickname === "" || state.cardId === "") {
         console.log("用户名或抖音号不能为空！！");
       } else {

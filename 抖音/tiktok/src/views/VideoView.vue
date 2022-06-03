@@ -122,7 +122,7 @@
 
 <script>
 import { reactive, toRefs, onUpdated, onMounted } from "vue";
-import RightBar from "../components/RightBar.vue";
+import   RightBar from "../components/RightBar.vue";
 import { Toast } from "vant";
 import axios from 'axios';
 import store from "../store/index.js";
