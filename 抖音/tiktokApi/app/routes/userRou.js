@@ -38,7 +38,20 @@ module.exports = app =>{
     }).catch(err => {
       formatErrorMessage(res, err.error)
     })
-  })
+    })
+    //删除
+    router.post('/delete',  (req, res)=>{
+      var id=req.body.id
+      var sql = `DELETE from commment2s WHERE id= '${id}'`;
+      console.log(sql)
+      query(sql, function (err, rows) {
+          if (err) {
+              console.log('err:', err.message);
+          }else{
+            res.send(rows)
+          }
+      });
+    })
   // 格式化错误信息
   function formatErrorMessage(res, message,) {
     res.status(500).send({

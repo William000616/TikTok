@@ -1,3 +1,4 @@
+
 const db = require("../models");
 const Comm2 = db.Comment2
 exports.findAll=(req,res)=>{

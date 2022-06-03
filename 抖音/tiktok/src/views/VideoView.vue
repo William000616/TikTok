@@ -91,6 +91,7 @@
                       </p>
                     </div>
                     <div class="zan">
+                      <div @click="del(item.id)">删除</div>
                       <svg class="icon0" aria-hidden="true">
                         <use xlink:href="#icon-dianzan"></use>
                       </svg>
@@ -123,6 +124,7 @@ import RightBar from "../components/RightBar.vue";
 import { Toast } from "vant";
 import axios from 'axios';
 import store from "../store/index.js";
+import $ from "jquery";
 export default {
   components: {
     RightBar,
@@ -269,6 +271,19 @@ export default {
 
       }
     }
+    const del = (id) =>{
+      axios.post("http://localhost:3000/api/user/delete", {
+          id: id
+        }).then(res => {
+          console.log(res.data)
+          axios.get("http://localhost:3000/api/user/comm2", {
+          }).then(res => {
+            state.comList2 = res.data
+            console.log(state.comList)
+          })
+          //  state.comListShow=true
+        })
+    }
     const showComs = () => {
       state.showComment = true;
     };
@@ -283,6 +298,7 @@ export default {
       showComs,
       close,
       pub,
+      del
     };
   },
 };
